@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Form, redirect } from "react-router-dom";
+import { createOrder } from "../../services/apiRestaurant";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -38,7 +40,7 @@ function CreateOrder() {
     <div>
       <h2>Ready to order? Let's go!</h2>
 
-      <form>
+      <Form method="POST">
         <div>
           <label>First Name</label>
           <input type="text" name="customer" required />
@@ -68,13 +70,25 @@ function CreateOrder() {
           />
           <label htmlFor="priority">Want to yo give your order priority?</label>
         </div>
-
+        <input type="hidden" value={JSON.stringify(cart)} name="cart" />
         <div>
           <button>Order now</button>
         </div>
-      </form>
+      </Form>
     </div>
   );
+}
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const data = await Object.fromEntries(formData);
+  const order = {
+    ...data,
+    cart: JSON.parse(data.cart),
+    priority: data.priority === "on",
+  };
+  const res = await createOrder(order);
+  return redirect(`/order/${res.id}`);
 }
 
 export default CreateOrder;
