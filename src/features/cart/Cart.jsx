@@ -9,7 +9,6 @@ function Cart() {
   const cart = useSelector((state) => state.cart.cart);
   const username = useSelector((state) => state.user.username);
   const dispatch = useDispatch();
-  function handleClick() {}
 
   if (cart.length === 0) return <EmptyCart />;
 
@@ -24,7 +23,7 @@ function Cart() {
         ))}
       </ul>
       <div className="mt-6 space-x-2">
-        <Button onClick={handleClick} type={"primary"} to="/order/new">
+        <Button type={"primary"} to="/order/new">
           Order pizzas
         </Button>
         <Button onClick={() => dispatch(clearCart())} type={"secondary"}>
